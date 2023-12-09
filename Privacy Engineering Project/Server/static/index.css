@@ -1,0 +1,49 @@
+/* Reset some default margin and padding */
+body, h1, button {
+    margin: 0;
+    padding: 0;
+}
+
+/* Apply a background color to the body */
+body {
+    background-color: #f4f4f4;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Style the header */
+h1 {
+    color: #333;
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+}
+
+/* Style the container for the buttons */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Optional: Make the container take the full height of the viewport */
+    gap: 10px; /* Optional: Add some space between buttons */
+}
+
+/* Style the login and signup buttons */
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Style the hyperlink */
+a {
+    text-decoration: none;
+}
