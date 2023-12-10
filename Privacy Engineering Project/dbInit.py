@@ -1,6 +1,7 @@
 import psycopg2
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import scoped_session, sessionmaker
+from faker import Faker
 
 
 # Configure the PostgreSQL connection
@@ -20,31 +21,100 @@ def create_connection():
     return connection
 
 
-def create_users_table():
-    connection = create_connection()
+# Modify the 'generate_dummy_data' function to generate related values for username, email, and full name
+def generate_dummy_data(num_entries):
+    fake = Faker()
+
+    data = []
+    for _ in range(num_entries):
+        full_name = fake.name()
+        name_parts = full_name.split(maxsplit=1)  # Split at most once, consider only the first part as first_name
+
+        first_name = name_parts[0]
+        last_name = name_parts[1] if len(name_parts) > 1 else ""  # Use an empty string if there is no last name
+
+        entry = {
+            'username': f"{first_name.lower()}{last_name.lower()}",
+            'email': f"{first_name.lower()}{last_name.lower()}@example.com",
+            'password': fake.password(),
+            'full_name': full_name,
+            'zip_code': fake.zipcode(),
+            'gender': fake.random_element(elements=('Male', 'Female', 'Other')),
+            'social_security': fake.random_int(min=100000000, max=999999999),
+            'date_of_birth': fake.date_of_birth(),
+            'employee_number': fake.random_int(min=1000, max=9999),
+            'department': fake.random_element(elements=('HR', 'IT', 'Product', 'Sales', 'Legal', 'Marketing')),
+            'type_of_report': fake.random_element(elements=('Daily', 'Weekly', 'Monthly')),
+            'phone_number': fake.phone_number()[:10]  # Adjust the length as needed
+        }
+        data.append(entry)
+
+    return data
+
+
+# Function to insert dummy data into the 'users' table
+def insert_dummy_users(connection, dummy_data):
     cursor = connection.cursor()
-    output = cursor.execute('''CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-    );''')
-    connection.close()
-    return output
 
-print(create_users_table())
+    for entry in dummy_data:
+        cursor.execute(
+            "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+            (entry['username'], entry['email'], entry['password'])
+        )
+        cursor.execute(
+            "INSERT INTO reports (full_name, zip_code, gender, social_security, date_of_birth, "
+            "employee_number, department, type_of_report, email, phone_number) VALUES "
+            "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (
+                entry['full_name'], entry['zip_code'], entry['gender'], entry['social_security'],
+                entry['date_of_birth'], entry['employee_number'], entry['department'],
+                entry['type_of_report'], entry['email'], entry['phone_number']
+            )
+        )
+    connection.commit()
+    cursor.close()
 
-
-
-
-
-'''  # Example: Fetch data from the database
-    connection = create_connection()
+# Function to get existing emails from the 'users' table
+def get_existing_emails(connection):
     cursor = connection.cursor()
+    cursor.execute("SELECT email FROM users")
+    emails = [row[0] for row in cursor.fetchall()]
+    cursor.close()
+    return emails
 
-    # Example query
-    cursor.execute('SELECT * FROM person')
-    data = cursor.fetchall()
-    print(data)
+# Function to insert dummy data into the 'reports' table using existing emails
+# def insert_dummy_reports(connection, dummy_data, existing_emails):
+#     cursor = connection.cursor()
+
+#     for entry in dummy_data:
+#         email = existing_emails.pop(0)
+#         cursor.execute(
+#             "INSERT INTO reports (full_name, zip_code, gender, social_security, date_of_birth, "
+#             "employee_number, department, type_of_report, email, phone_number) VALUES "
+#             "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+#             (
+#                 entry['full_name'], entry['zip_code'], entry['gender'], entry['social_security'],
+#                 entry['date_of_birth'], entry['employee_number'], entry['department'],
+#                 entry['type_of_report'], email, entry['phone_number']
+#             )
+#         )
+
+#     connection.commit()
+#     cursor.close()
+
+# Usage
+if __name__ == "__main__":
+    connection = create_connection()
+
+    # Generate and insert dummy data into 'users' table
+    dummy_users_data = generate_dummy_data(num_entries=10)
+    insert_dummy_users(connection, dummy_users_data)
+
+    # Get existing emails from 'users' table
+    existing_emails = get_existing_emails(connection)
+
+    # Generate and insert dummy data into 'reports' table using existing emails
+    dummy_reports_data = generate_dummy_data(num_entries=10)
+    # insert_dummy_reports(connection, dummy_reports_data, existing_emails)
+
     connection.close()
-    '''
