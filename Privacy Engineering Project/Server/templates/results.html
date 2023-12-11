@@ -26,7 +26,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 10%;"></th>
+                            <!-- <th style="width: 10%;"></th> -->
                             <th style="width: 10%;">Zip Code</th>
                             <th style="width: 10%;">Gender</th>
                             <th style="width: 10%;">Age</th>
@@ -39,7 +39,7 @@
                     <tbody>
                         {% for result in reports_data %}
                         <tr>
-                            <td style="width: 10%">{{ result[0] }}</td>
+                            <!-- <td style="width: 10%">{{ result[0] }}</td> -->
                             <td style="width: 10%">{{ result[2] }}</td>
                             <td style="width: 10%">{{ result[3] }}</td>
                             <td style="width: 10%">{{ result[5] }}</td>
@@ -60,19 +60,27 @@
                             <tr>
                                 <th></th>
                                 <!-- <th>Full Name</th> -->
-                                <th sytle="width: 20%">Username</th>
-                                <th sytle="width: 20%">Email</th>
+                                <th>Full Name</th>
+                                <th >Zip Code</th>
+                                <th >Gender</th>
+                                <th >Age</th>
+                                <th> Department</th>
+                                <!-- <th style="width: 10%;">Department</th> -->
                                 <!-- <th>Social Security</th> -->
                                 <!-- <th>Email</th> -->
                                 <!-- <th>Phone Number</th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            {% for result in users_data %}
+                            {% for result in reports_data %}
                             <tr>
-                                <td style="width: 20%">{{ result[0] }}</td>
-                                <td style="width: 20%">{{ result[1] }}</td>
-                                <td style="width: 20%">{{ result[2] }}</td>
+                                <!-- <td style="width: 10%">{{ result[0] }}</td> -->
+                                <td >{{ result[1] }}</td>
+                                <td >{{ result[2] }}</td>
+                                <td >{{ result[3] }}</td>
+                                <td >{{ result[5] }}</td>
+                                <td >{{ result[7] }}</td>
+                                <!-- <td style="width: 10%">{{ result[8] }}</td> -->
                             </tr>
                             {% endfor %}
                         </tbody>

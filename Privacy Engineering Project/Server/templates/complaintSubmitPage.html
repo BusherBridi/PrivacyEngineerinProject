@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Submission</title>
+    <link rel="stylesheet" href="../static/complaintSubmitPage.css">
+</head>
+<body>
+    <!-- <h2>Complaint Submission Form</h2> -->
+
+    <form action="{{ url_for('sendComplaint') }}" method="post">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" required><br>
+
+        <label for="zipCode">Zip Code:</label>
+        <input type="text" id="zipCode" name="zipCode" required><br>
+
+        <label for="gender">Gender:</label>
+        <select id = "gender" name = "gender">
+            <option value = "Male">Male</option>
+            <option value = "Female">Female</option>
+            <option value = "Other">Other</option>
+        </select><br>
+
+        <label for="ssn">Social Security Number:</label>
+        <input type="text" id="ssn" name="ssn" required><br>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br>
+
+        <label for="employeeNumber">Employee Number:</label>
+        <input type="text" id="employeeNumber" name="employeeNumber" required><br>
+
+        <label for="department">Department:</label>
+        <select id="department" name="department">
+            <option value="HR">HR</option>
+            <option value="IT">IT</option>
+            <option value="Product">Product</option>
+            <option value="Sales">Sales</option>
+            <option value="Legal">Legal</option>
+            <option value="Marketing">Marketing</option>
+        </select><br>
+
+        <label for="typeOfReport">Type of Report:</label>
+        <select id="typeOfReport" name="typeOfReport">
+            <option value="General">General</option>
+            <option value="Sexual Harassment">Sexual Harassment</option>
+            <option value="Racial Discrimination">Racial Discrimination</option>
+            <option value="Gender Discrimination">Gender Discrimination</option>
+            <option value="Bullying">Bullying</option>
+            <option value="Whistleblower">Whistleblower</option>
+            <option value="Workplace Violence">Workplace Violence</option>
+            <option value="Unfair Labor Practices">Unfair Labor Practices</option>
+            <option value="Retaliation">Retaliation</option>
+            <option value="Health and Safety Violations">Health and Safety Violations</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Ethical Violations">Ethical Violations</option>
+            <option value="Privacy Violations">Privacy Violations</option>
+            <option value="Environmental Violations">Environmental Violations</option>
+        </select><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" required><br>
+
+        <input type="submit" value="Submit Complaint">
+    </form>
+</body>
+</html>

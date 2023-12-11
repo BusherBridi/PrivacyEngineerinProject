@@ -15,14 +15,16 @@
     <!-- Container for the buttons -->
     <div class="container">
         <!-- Button to go to the login page using url_for -->
-        <a href="{{ url_for('LoginPage') }}">
+        <!-- <a href="{{ url_for('LoginPage') }}">
             <button>Login</button>
+        </a> -->
+        <a href = "{{ url_for('submitComplaint')}}">
+            <button>Submit Complaint</button>
         </a>
-
         <!-- Button to go to the signup page using url_for -->
-        <a href="{{ url_for('signup') }}">
+        <!-- <a href="{{ url_for('signup') }}">
             <button>Signup</button>
-        </a>
+        </a> -->
 
         <!-- Button to go to the results page using url_for -->
         <a href="{{ url_for('results') }}">

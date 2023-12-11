@@ -16,7 +16,7 @@ db_params = {
 
 
 def generate_zip_code():
-    return f"{random.randint(90000, 99999)}-{random.randint(1000, 9999)}"
+    return f"{random.randint(90000, 99999)}"
 # Function to create a connection to the PostgreSQL database
 def create_connection():
     connection = psycopg2.connect(**db_params)
@@ -31,10 +31,10 @@ def generate_dummy_data(num_entries):
     data = []
     for _ in range(num_entries):
         full_name = fake.name()
-        name_parts = full_name.split(maxsplit=1)  # Split at most once, consider only the first part as first_name
+        name_parts = full_name.split(maxsplit=1)
 
         first_name = name_parts[0]
-        last_name = name_parts[1] if len(name_parts) > 1 else ""  # Use an empty string if there is no last name
+        last_name = name_parts[1] if len(name_parts) > 1 else ""
 
         entry = {
             'username': f"{first_name.lower()}{last_name.lower()}",
@@ -44,11 +44,12 @@ def generate_dummy_data(num_entries):
             'zip_code': fake.random_element(elements=zip_codes),
             'gender': fake.random_element(elements=('Male', 'Female', 'Other')),
             'social_security': fake.random_int(min=100000000, max=999999999),
-            'date_of_birth': fake.date_of_birth(),
+            'date_of_birth': fake.pyint(min_value=18, max_value=99),
+            # 'age': fake.pyint(min_value=18, max_value=99),  # Random age between 18 and 99
             'employee_number': fake.random_int(min=1000, max=9999),
             'department': fake.random_element(elements=('HR', 'IT', 'Product', 'Sales', 'Legal', 'Marketing')),
             'type_of_report': fake.random_element(elements=('General', 'Sexual Harassment', 'Racial Discrimination', 'Gender Discrimination', 'Bullying', 'Whistleblower', 'Workplace Violence', 'Unfair Labor Practices', 'Retaliation', 'Health and Safety Violations', 'Fraud', 'Ethical Violations', 'Privacy Violations', 'Environmental Violations')),
-            'phone_number': fake.phone_number()[:10]  # Adjust the length as needed
+            'phone_number': fake.phone_number()[:10]
         }
         data.append(entry)
 
