@@ -2,6 +2,7 @@ import psycopg2
 from sqlalchemy import create_engine, exc
 from sqlalchemy.orm import scoped_session, sessionmaker
 from faker import Faker
+import random
 
 
 # Configure the PostgreSQL connection
@@ -14,7 +15,8 @@ db_params = {
 
 
 
-
+def generate_zip_code():
+    return f"{random.randint(90000, 99999)}-{random.randint(1000, 9999)}"
 # Function to create a connection to the PostgreSQL database
 def create_connection():
     connection = psycopg2.connect(**db_params)
@@ -23,6 +25,7 @@ def create_connection():
 
 # Modify the 'generate_dummy_data' function to generate related values for username, email, and full name
 def generate_dummy_data(num_entries):
+    zip_codes = [generate_zip_code() for _ in range(20)]
     fake = Faker()
 
     data = []
@@ -38,13 +41,13 @@ def generate_dummy_data(num_entries):
             'email': f"{first_name.lower()}{last_name.lower()}@example.com",
             'password': fake.password(),
             'full_name': full_name,
-            'zip_code': fake.zipcode(),
+            'zip_code': fake.random_element(elements=zip_codes),
             'gender': fake.random_element(elements=('Male', 'Female', 'Other')),
             'social_security': fake.random_int(min=100000000, max=999999999),
             'date_of_birth': fake.date_of_birth(),
             'employee_number': fake.random_int(min=1000, max=9999),
             'department': fake.random_element(elements=('HR', 'IT', 'Product', 'Sales', 'Legal', 'Marketing')),
-            'type_of_report': fake.random_element(elements=('Daily', 'Weekly', 'Monthly')),
+            'type_of_report': fake.random_element(elements=('General', 'Sexual Harassment', 'Racial Discrimination', 'Gender Discrimination', 'Bullying', 'Whistleblower', 'Workplace Violence', 'Unfair Labor Practices', 'Retaliation', 'Health and Safety Violations', 'Fraud', 'Ethical Violations', 'Privacy Violations', 'Environmental Violations')),
             'phone_number': fake.phone_number()[:10]  # Adjust the length as needed
         }
         data.append(entry)
@@ -107,14 +110,14 @@ if __name__ == "__main__":
     connection = create_connection()
 
     # Generate and insert dummy data into 'users' table
-    dummy_users_data = generate_dummy_data(num_entries=10)
+    dummy_users_data = generate_dummy_data(num_entries=100)
     insert_dummy_users(connection, dummy_users_data)
 
     # Get existing emails from 'users' table
-    existing_emails = get_existing_emails(connection)
+    # existing_emails = get_existing_emails(connection)
 
     # Generate and insert dummy data into 'reports' table using existing emails
-    dummy_reports_data = generate_dummy_data(num_entries=10)
+    # dummy_reports_data = generate_dummy_data(num_entries=10)
     # insert_dummy_reports(connection, dummy_reports_data, existing_emails)
 
     connection.close()

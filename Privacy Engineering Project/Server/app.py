@@ -69,6 +69,7 @@ def userCreationComplete():
             
             cursor.execute("INSERT INTO users (email, username, password) VALUES (%s, %s, %s)", (email, username, hashedPassword))
             connection.commit()
+            connection.close()
         except Exception as error:
             print("failure here 2")
             errorMSG = error.args[0]
@@ -114,7 +115,16 @@ def update_user():
 
 @app.route('/results')
 def results():
-     return render_template('results.html')
+    connection = create_connection()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM reports;")
+    reports_data = cursor.fetchall()
+    cursor.execute("SELECT * FROM users;")
+    users_data = cursor.fetchall()
+    connection.commit()
+    connection.close()
+    # print(table_data[0])
+    return render_template('results.html',reports_data = reports_data, users_data=users_data)
 
 
 @app.route('/test')
