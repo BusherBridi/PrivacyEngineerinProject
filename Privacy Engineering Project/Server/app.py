@@ -244,7 +244,39 @@ def results():
     # print(table_data[0])
     return render_template('results.html',reports_data = reports_data, personal_info=personal_info, ratio=ratio, kScore = TARGET_K_SCORE)
 
+def delta_Presence_of_Individual(identities, identities_row_id, published_table, quasi_identifiers):
+    cnt_identities = identities[quasi_identifiers][identities[quasi_identifiers] == identities.loc[identities_row_id, quasi_identifiers]].dropna().shape[0]
+    cnt_published_table = published_table[quasi_identifiers][published_table[quasi_identifiers] == identities.loc[identities_row_id, quasi_identifiers]].dropna().shape[0]
+    if cnt_identities > 0:
+        delta = cnt_published_table / cnt_identities
+    else:
+        delta = 0.0
+    return delta
 
+@app.route('/calculate_delta', methods=['POST'])
+def calculate_delta():
+    try:
+        # Get data from the request
+        request_data = request.json
+        identities_data = request_data['identities']
+        identities_row_id = request_data['identities_row_id']
+        published_table_data = request_data['published_table']
+        quasi_identifiers = request_data['quasi_identifiers']
+
+        # Convert data to pandas DataFrames
+        identities = pd.DataFrame(identities_data)
+        published_table = pd.DataFrame(published_table_data)
+
+        # Calculate delta
+        delta_value = delta_Presence_of_Individual(identities, identities_row_id, published_table, quasi_identifiers)
+
+        # Return the result
+        return jsonify({'delta': delta_value})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+    
 @app.route('/test')
 def render():
         return render_template('test.html')
