@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,103 +17,75 @@
 
 <body>
     <h1>Results</h1>
-    <div class="results-container">
-
-
-        <!-- Wrap the table inside a container div -->
-        <div class="table-wrapper">
-            <div class="table-container">
-                <!-- Display results -->
-                <table>
-                    <thead>
-                        <tr>
-                            <!-- <th style="width: 10%;"></th> -->
-                            <th style="width: 10%;">Zip Code</th>
-                            <th style="width: 10%;">Gender</th>
-                            <th style="width: 10%;">Age</th>
-                            <th style="width: 10%;">Department</th>
-                            <th style="width: 10%;">Type of Report</th>
-                            <!-- <th>Email</th> -->
-                            <!-- <th>Phone Number</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for result in reports_data %}
-                        <tr>
-                            <!-- <td style="width: 10%">{{ result[0] }}</td> -->
-                            <td style="width: 10%">{{ result[2] }}</td>
-                            <td style="width: 10%">{{ result[3] }}</td>
-                            <td style="width: 10%">{{ result[5] }}</td>
-                            <td style="width: 10%">{{ result[7] }}</td>
-                            <td style="width: 10%">{{ result[8] }}</td>
-                            <!-- <td>{{ result[9] }}</td> -->
-                            <!-- <td>{{ result[10] }}</td> -->
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <b class ="fw-bold" >Ratio of True to Generated Reports: <span class = "true-ratio">{{ratio}}</span></b>
+                <br>
+                <b class ="fw-bold"  >Guaranteed K-Anonymity Score: <span class = "k-score">{{ kScore }}</span></b>
             </div>
-            <!-- Add another table next to it -->
-            <div class="table-wrapper">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <!-- <th>Full Name</th> -->
-                                <th>Full Name</th>
-                                <th >Zip Code</th>
-                                <th >Gender</th>
-                                <th >Age</th>
-                                <th> Department</th>
-                                <!-- <th style="width: 10%;">Department</th> -->
-                                <!-- <th>Social Security</th> -->
-                                <!-- <th>Email</th> -->
-                                <!-- <th>Phone Number</th> -->
-                            </tr>
+            <div class="col">
+
+                <!-- Display results -->
+                <h3>Reports</h3>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table table-dark table-striped table-bordered " id = "reportsTable">
+                        
+                        <tr>
+                            <th>Row Num</th>
+                            <th>Zip Code</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Department</th>
+                            <th>Type of Report</th>
+                        </tr>
                         </thead>
                         <tbody>
                             {% for result in reports_data %}
                             <tr>
-                                <!-- <td style="width: 10%">{{ result[0] }}</td> -->
-                                <td >{{ result[1] }}</td>
-                                <td >{{ result[2] }}</td>
-                                <td >{{ result[3] }}</td>
-                                <td >{{ result[5] }}</td>
-                                <td >{{ result[7] }}</td>
-                                <!-- <td style="width: 10%">{{ result[8] }}</td> -->
+                                <td>{{ result[0] }}</td>
+                                <td>{{ result[2] }}</td>
+                                <td>{{ result[3] }}</td>
+                                <td>{{ result[5] }}</td>
+                                <td>{{ result[7] }}</td>
+                                <td>{{ result[8] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h3>Employees</h3>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+                    <table class="table table-dark table-striped table-bordered" id="employeesTable">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Row Num</th>
+                                <th>Full Name</th>
+                                <th>Zip Code</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in personal_info %}
+                            <tr>
+                                <td>{{ result[0] }}</td>
+                                <td>{{ result[4] }}</td>
+                                <td>{{ result[5] }}</td>
+                                <td>{{ result[6] }}</td>
+                                <td>{{ result[8] }}</td>
+                                <td>{{ result[10] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- Other content as needed -->
         </div>
     </div>
 
-    <!-- Display selected headers under the container -->
-    <!-- <p id="selected-headers">Selected Headers:</p> -->
-
-    <!-- Remove button -->
-    <!-- <button id="remove-button" style="display: none;">Remove</button> -->
-    <!-- Display selected headers and K-Score -->
-    <!-- <div class="selected-headers">
-        <p id="selected-headers">Selected Headers:</p>
-        <p id="k-score">K-Score: </p> -->
-    <!-- </div>
-    </div> -->
-    <!-- Display selected headers under the container -->
-    <!-- <p id="selected-headers">Selected Headers:</p>
-
-    Remove button -->
-    <!-- <button id="remove-button" style="display: none;">Remove</button> -->
-    <!-- Display selected headers and K-Score -->
-    <!-- <div class="selected-headers">
-        <p id="selected-headers">Selected Headers:</p>
-        <p id="k-score">K-Score: </p>
-    </div> -->
 </body>
 
 </html>

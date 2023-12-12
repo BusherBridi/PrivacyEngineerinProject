@@ -135,7 +135,7 @@ def calculateKScore(data, qID):
     
     return k, equivalence_classes
 def generate_zip_code():
-    return f"{random.randint(98000, 99999)}"
+    return f"{random.randint(99900, 99999)}"
 
 def generate_dummy_data(num_entries):
     zip_codes = [generate_zip_code() for _ in range(20)]
@@ -203,7 +203,7 @@ def sendComplaint():
     fetchQuery = pd.read_sql_query("SELECT * FROM reports", connection)
     connection.commit()
     df = pd.DataFrame(fetchQuery, columns=["zip_code", "gender", "age", "department", "type_of_report"])
-    kScore, eqv_classes = calculateKScore(df, ["gender"])
+    kScore, eqv_classes = calculateKScore(df, ["gender", "department", "type_of_report"])
     print("kscore = " + str(kScore))
     
     while kScore < TARGET_K_SCORE:
@@ -212,8 +212,9 @@ def sendComplaint():
         fetchQuery = pd.read_sql_query("SELECT * FROM reports", connection)
         connection.commit()
         df = pd.DataFrame(fetchQuery, columns=["zip_code", "gender", "age", "department", "type_of_report"])
-        kScore, eqv_classes = calculateKScore(df, ["gender"])
-        print("Inserted data: Current KScore = " + str(kScore))
+        kScore, eqv_classes = calculateKScore(df, ["gender", "department", "type_of_report"])
+        print("Inserted data: " + str(fakeData))
+        print("Current KScore = " + str(kScore))
 
     cursor.execute("INSERT INTO reports (full_name, zip_code, gender, social_security, age, employee_number, department, type_of_report, email, phone_number, is_true) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )", (fullName, zipCode, gender, socialSecurityNumber, age, employeeNumber, department, typeOfReport, email, phoneNumber, isTrue))
     cursor.execute("INSERT INTO personal_info (full_name, zip_code, gender, age, department, social_security) VALUES (%s, %s, %s, %s, %s, %s)", (fullName, zipCode, gender, age, department, socialSecurityNumber))
@@ -229,12 +230,19 @@ def results():
     cursor.execute("SELECT * FROM reports;")
     reports_data = cursor.fetchall()
     # today = datetime.today()
-    cursor.execute("SELECT * FROM users;")
-    users_data = cursor.fetchall()
+    cursor.execute("SELECT * FROM personal_info;")
+    personal_info = cursor.fetchall()
+    cursor.execute("SELECT COUNT(*) FROM reports WHERE is_true = true;")
+    true_count = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(*) FROM reports WHERE is_true = false;")
+    false_count = cursor.fetchone()[0]
     connection.commit()
     connection.close()
+    total_count = true_count + false_count
+    ratio = true_count / total_count if total_count > 0 else 0
+    ratio = round(ratio, 3)
     # print(table_data[0])
-    return render_template('results.html',reports_data = reports_data, users_data=users_data)
+    return render_template('results.html',reports_data = reports_data, personal_info=personal_info, ratio=ratio, kScore = TARGET_K_SCORE)
 
 
 @app.route('/test')
