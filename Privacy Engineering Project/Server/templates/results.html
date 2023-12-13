@@ -20,11 +20,16 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <b class ="fw-bold" >Ratio of True to Generated Reports: <span class = "true-ratio">{{ratio}}</span></b>
+                <b class ="fw-bold"> Ratio of True to Generated Reports: <span class = "true-ratio">{{ratio}}</span></b>
                 <br>
-                <b class ="fw-bold"  >Guaranteed K-Anonymity Score: <span class = "k-score">{{ kScore }}</span></b>
+                <b class ="fw-bold"> Guaranteed K-Anonymity Score: <span class = "k-score">{{ kScore }}</span></b>
                 <br>
-                <b class ="fw-bold" >Delta Presence: <span id="deltaPresenceResult"></span></b>
+                <b class = "fw-bold"> Guaranteed Delta-Presence Score: <span class = "k-score"> {{ delta }}></span></b>
+                <br>
+                <b class = "fw-bold">Time to submit: <span class = "k-score">{{ time }}</span></b>
+                <br>
+                <b class ="fw-bold" >Delta Presence for Selected Class: <span id="deltaPresenceResult"></span></b>
+
             </div>
             <div class="col">
 

@@ -6,6 +6,7 @@ import hashlib
 import pandas as pd
 from faker import Faker
 import random
+import time
 app = Flask(__name__)
 
 # Configure the PostgreSQL connection
@@ -23,6 +24,8 @@ db_params = {
 }
 
 TARGET_K_SCORE = 2
+TARGET_DELTA_SCORE = 0.5
+duration = 0
 # Function to create a connection to the PostgreSQL database
 def create_connection():
     connection = psycopg2.connect(**db_params)
@@ -170,6 +173,24 @@ def insert_dummy_users(connection, dummy_data):
 
     for entry in dummy_data:
         cursor.execute(
+            "INSERT INTO personal_info (full_name, zip_code, gender, social_security, age, "
+            "employee_number, department, type_of_report, email, phone_number) VALUES "
+            "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (
+                entry['full_name'], entry['zip_code'], entry['gender'], entry['social_security'],
+                entry['age'], entry['employee_number'], entry['department'],
+                entry['type_of_report'], entry['email'], entry['phone_number']
+            )
+        )
+    connection.commit()
+    cursor.close() 
+    return 0
+
+def insert_dummy_reports(connection, dummy_data):
+    cursor = connection.cursor()
+
+    for entry in dummy_data:
+        cursor.execute(
             "INSERT INTO reports (full_name, zip_code, gender, social_security, age, "
             "employee_number, department, type_of_report, email, phone_number, is_true) VALUES "
             "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -186,6 +207,7 @@ def insert_dummy_users(connection, dummy_data):
 
 @app.route('/sendComplaint', methods = ["POST", "GET"])
 def sendComplaint():
+    start_time = time.time()
     connection = create_connection()
     cursor = connection.cursor()
     fullName = str(request.form.get("fullName").upper())
@@ -208,7 +230,7 @@ def sendComplaint():
     
     while kScore < TARGET_K_SCORE:
         fakeData = generate_dummy_data(1)
-        insert_dummy_users(connection, fakeData)
+        insert_dummy_reports(connection, fakeData)
         fetchQuery = pd.read_sql_query("SELECT * FROM reports", connection)
         connection.commit()
         df = pd.DataFrame(fetchQuery, columns=["zip_code", "gender", "age", "department", "type_of_report"])
@@ -216,11 +238,53 @@ def sendComplaint():
         print("Inserted data: " + str(fakeData))
         print("Current KScore = " + str(kScore))
 
+    
+
+    # Delta Presence:
+    # calculate existing delta presence for speicfic employee's qID:
+    cursor.execute("SELECT COALESCE(COUNT(*), 0) as row_count FROM personal_info GROUP BY gender, department, type_of_report HAVING COUNT(*) > 1;")
+    result = cursor.fetchone()
+    print(result)
+    personal_info_count = result[0] if result is not None else 0
+    cursor.execute("SELECT COALESCE(COUNT(*), 0) as row_count FROM reports GROUP BY gender, department, type_of_report HAVING COUNT(*) > 1;")
+    result = cursor.fetchone()
+    reports_count = result[0] if result is not None else 0
+    current_delta_score = 1
+    if(personal_info_count == 0):
+        current_delta_score = 1
+    else:
+        current_delta_score = reports_count/personal_info_count
+    while current_delta_score > TARGET_DELTA_SCORE:
+        fakeData = generate_dummy_data(1)
+        insert_dummy_users(connection, fakeData)
+        print("Inserting fake users")
+
+        # Query for personal_info
+        cursor.execute("SELECT COALESCE(COUNT(*), 0) as row_count FROM personal_info GROUP BY gender, department, type_of_report HAVING COUNT(*) > 1;")
+        personal_info_result = cursor.fetchone()
+        personal_info_count = personal_info_result[0] if personal_info_result is not None else 0
+
+        # Query for reports
+        cursor.execute("SELECT COALESCE(COUNT(*), 0) as row_count FROM reports GROUP BY gender, department, type_of_report HAVING COUNT(*) > 1;")
+        reports_result = cursor.fetchone()
+        reports_count = reports_result[0] if reports_result is not None else 0
+
+        if personal_info_count == 0:
+            current_delta_score = 0
+        else:
+            current_delta_score = reports_count / personal_info_count
+
+        print("Current delta: " + str(current_delta_score))
+
     cursor.execute("INSERT INTO reports (full_name, zip_code, gender, social_security, age, employee_number, department, type_of_report, email, phone_number, is_true) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s )", (fullName, zipCode, gender, socialSecurityNumber, age, employeeNumber, department, typeOfReport, email, phoneNumber, isTrue))
     cursor.execute("INSERT INTO personal_info (full_name, zip_code, gender, age, department, social_security) VALUES (%s, %s, %s, %s, %s, %s)", (fullName, zipCode, gender, age, department, socialSecurityNumber))
+
     connection.commit()
     connection.close()
 
+    end_time = time.time()
+    duration = end_time - start_time
+    print("DURATION: " + str(duration))
     return render_template("index.html")
 
 @app.route('/results')
@@ -242,7 +306,7 @@ def results():
     ratio = true_count / total_count if total_count > 0 else 0
     ratio = round(ratio, 3)
     # print(table_data[0])
-    return render_template('results.html',reports_data = reports_data, personal_info=personal_info, ratio=ratio, kScore = TARGET_K_SCORE)
+    return render_template('results.html',reports_data = reports_data, personal_info=personal_info, ratio=ratio, kScore = TARGET_K_SCORE, delta = TARGET_DELTA_SCORE, time = duration)
 
 def delta_Presence_of_Individual(identities, identities_row_id, published_table, quasi_identifiers):
     cnt_identities = identities[quasi_identifiers][identities[quasi_identifiers] == identities.loc[identities_row_id, quasi_identifiers]].dropna().shape[0]

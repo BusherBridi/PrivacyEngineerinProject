@@ -57,7 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log("Employee Quasi Count:", countArrayOccurrences(employeeQI, SelectedEmployeeQuasiIdentifiers))
             var deltaPresenceEmployeeCount = countArrayOccurrences(employeeQI, SelectedEmployeeQuasiIdentifiers);
             var deltaPresenceReportCount = countArrayOccurrences(reportsDataQI, SelectedEmployeeQuasiIdentifiers)
-            var deltaPresence = deltaPresenceEmployeeCount / deltaPresenceReportCount;
+            var deltaPresence = deltaPresenceReportCount / deltaPresenceEmployeeCount;
+            console.log("Employee count:", deltaPresenceEmployeeCount)
+            console.log("Report Count:", deltaPresenceReportCount)
             console.log("Delta Presence of selcted person:", deltaPresence);
             var deltaPresenceElement = document.getElementById("deltaPresenceResult");
             deltaPresenceElement.innerHTML = deltaPresence;
@@ -153,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var cells = row.getElementsByTagName("td");
 
             // Define the indices of the columns you want to store
-            var columnIndices = [2, 3, 4, 5]; // Adjust these indices based on your requirements
+            var columnIndices = [3, 4, 5]; // Adjust these indices based on your requirements
 
             for (var i = 0; i < columnIndices.length; i++) {
                 var columnIndex = columnIndices[i];
