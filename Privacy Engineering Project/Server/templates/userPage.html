@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page - Privacy Guardians</title>
+
+    <!-- Link to your CSS file (replace with the actual path) -->
+    <link rel="stylesheet" type="text/css" href="../static/userCreationComplete.css">
+
+</head>
+<body>
+    <div class="userpage-container">
+        <h1>User Page</h1>
+        <h3>User Info</h3>
+
+        <!-- Display user information -->
+        <div class="user-info">
+            <p><strong>Full Name:</strong> {{user_data[1]}}</p>
+            <p><strong>Zip Code:</strong> 12345</p>
+            <p><strong>Gender:</strong> Male</p>
+            <p><strong>Social Security:</strong> XXX-XX-XXXX</p>
+            <p><strong>Date of Birth:</strong> 01/01/1990</p>
+            <p><strong>Employee Number:</strong> 123456</p>
+            <p><strong>Department:</strong> HR</p>
+            <p><strong>Type of Report:</strong> Monthly</p>
+            <p><strong>Email:</strong> {{user_data[2]}}</p>
+            <p><strong>Phone Number:</strong> (123) 456-7890</p>
+        </div>
+<h3> Update Information</h3>
+        <!-- Form to update user information -->
+        <form action="{{ url_for('update_user') }}" method="post">
+            <label for="full_name">Full Name:</label>
+            <input type="text" id="full_name" name="full_name" required>
+
+            <label for="zip_code">Zip Code:</label>
+            <input type="text" id="zip_code" name="zip_code" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="social_security"> Social Security:</label>
+            <input type = "password" id = "social_security" name = "social_security" required>
+
+            <label for ="date_of_birth">Date of Birth:</label>
+            <input type = "date" id = "date_of_birth" name = "date_of_birth" required>
+
+            <label for = "employee_number">Employee Number:</label>
+            <input type = "number" id = "employee_number" name = "employee_number" required>
+
+            <label for = "department">Department:</label>
+            <select id = "department" name = "department" required>
+                <option value = "hr">Human Resources</option>
+                <option value = "it">Information Technology</option>
+                <option value = "product">Product</option>
+                <option value ="sales">Sales</option>
+                <option value = "legal">Legal</option>
+                <option value = "marketing">Marketing</option>
+            </select>
+
+            <label for  = "email">Email</label>
+            <input type = "email" id = "email" name = "email" required>
+
+            <label for = "phone_number">Phone Number</label>
+            <input type ="tel" id = "phone_number" name = "phone_number" required>
+
+            <button type="submit">Update Information</button>
+        </form>
+    </div>
+</body>
+</html>

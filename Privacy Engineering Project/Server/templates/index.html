@@ -4,8 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask App</title>
+
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+
 </head>
 <body>
-    <h1>Hello, Flask!</h1>
+    <h1>Privacy Guardians</h1>
+
+    <!-- Container for the buttons -->
+    <div class="container">
+        <!-- Button to go to the login page using url_for -->
+        <!-- <a href="{{ url_for('LoginPage') }}">
+            <button>Login</button>
+        </a> -->
+        <a href = "{{ url_for('submitComplaint')}}">
+            <button>Submit Complaint</button>
+        </a>
+        <!-- Button to go to the signup page using url_for -->
+        <!-- <a href="{{ url_for('signup') }}">
+            <button>Signup</button>
+        </a> -->
+
+        <!-- Button to go to the results page using url_for -->
+        <a href="{{ url_for('results') }}">
+            <button>Public Results</button>
+        </a>
+    </div>
+
 </body>
 </html>

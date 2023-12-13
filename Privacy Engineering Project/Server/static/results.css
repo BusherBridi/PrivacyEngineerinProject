@@ -1,0 +1,31 @@
+body {
+    background-color: red;
+  }
+  .selected {
+    background-color: #007bff !important; /* Use !important to override the striped background color */
+    color: #ffffff; /* Change this color to your desired text color for the selected row */
+}
+.my-custom-scrollbar {
+    position: relative;
+    height: 500px;
+    overflow: auto;
+    }
+    .table-wrapper-scroll-y {
+    display: block;
+    }
+.container {
+    background-color: rgb(111, 111, 199);
+}
+
+.fw-bold {
+    font-size: large;
+}
+
+.true-ratio{
+    color: blue;
+}
+
+.k-score{
+    color: blue;
+}
+
